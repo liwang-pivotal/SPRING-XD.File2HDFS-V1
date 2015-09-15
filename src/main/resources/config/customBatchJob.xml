@@ -37,13 +37,20 @@
 	<hadoop:script-tasklet id="scriptTasklet" script-ref="hdfsScript" scope="step"/>
 	
 	<hadoop:script id="hdfsScript" language="groovy" scope="step">
-		<hadoop:property name="localSourceFile" value="file://${InputFile}"/>
+		<hadoop:property name="localSourceFile" value="file://${InputDir}"/>
 		<hadoop:property name="hdfsInputDir" value="${hdfs.input.path}"/>
 			if (!fsh.test(hdfsInputDir)) {
 				fsh.mkdir(hdfsInputDir);
 			}
+            
             if (fsh.test(localSourceFile)) {
-                fsh.moveFromLocal(localSourceFile, hdfsInputDir);
+                list = fsh.ls(localSourceFile);
+                list = list.drop(1);
+            
+                for (item in list) {
+                    path = item.getPath().toString();
+                    fsh.moveFromLocal(path,hdfsInputDir);
+                }
             }
 	</hadoop:script>
 	
