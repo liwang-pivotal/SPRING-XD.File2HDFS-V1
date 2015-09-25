@@ -43,6 +43,8 @@
 				fsh.mkdir(hdfsInputDir);
 			}
             
+            println localSourceFile;
+            
             if (fsh.test(localSourceFile)) {
                 list = fsh.ls(localSourceFile);
                 list = list.drop(1);
